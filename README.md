@@ -45,3 +45,13 @@ python3 scripts/walkthrough.py --workflow compare-renders
 持久化使用完整 JSON 状态的原子替换，保留全部任务与快照，事件只保留最近 500 条。适合中小规模、单写实例工作负载。清理结果只释放 PNG 字节，仍保留任务事实和摘要。进程重启可恢复任务；突然断电的文件系统耐久性不作额外保证。
 
 测试处于 deferred 阶段，基线未包含自动化测试套件或 `test_command`。生产工作流检查、构建与静态检查已单独提供。接口和持久状态的规则详见 `PROJECT_SPEC.md`、`docs/api.md`、`docs/operations.md`。
+
+## 交换格式兼容规范
+
+`docs/exchange.md` 面向第三方实现，固定 `atlas-scene` v1 的线上格式、两层摘要的规范编码、接受与拒绝边界，并明确一个关键选择：交换的是可再编辑的创作材料，不是某次冻结画面的复现凭据。`docs/exchange-vectors/` 提供 20 个带摘要与前像的接受/拒绝向量。
+
+```sh
+python3 scripts/exchange_conformance.py docs/exchange-vectors
+```
+
+该脚本是独立的纯 Python 校验器，不依赖 Go 代码或运行中的服务，用于确认第三方实现能复算摘要并得到相同的接受/拒绝结论。
